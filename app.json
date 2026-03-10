@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "C25K Runner",
+    "slug": "c25k-runner",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "c25k",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#FAF8F4"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.yke.pace5k"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#F0A500"
+      },
+      "package": "com.yke.pace5k"
+    },
+    "androidStatusBar": {
+      "translucent": true,
+      "backgroundColor": "#00000000"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "root": "./src/app"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
