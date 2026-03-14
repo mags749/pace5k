@@ -26,9 +26,16 @@ interface CompletedIntervalRowProps {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export const CompletedIntervalRow = ({ interval }: CompletedIntervalRowProps) => (
+export const CompletedIntervalRow = ({
+  interval,
+}: CompletedIntervalRowProps) => (
   <Row>
-    <AppIcon name="check-circle" size={16} color={Colors.walk} strokeWidth={1.5} />
+    <AppIcon
+      name="badge-check"
+      size={16}
+      color={Colors.walk}
+      strokeWidth={1.5}
+    />
     <RowText style={{ fontFamily: FontFamily.archivo }}>
       {formatTimer(interval.duration)} {interval.label.toLowerCase()}
     </RowText>

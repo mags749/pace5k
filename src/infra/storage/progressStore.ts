@@ -19,10 +19,18 @@ interface ProgressState {
   progress: AppProgress;
   isLoading: boolean;
   loadProgress: () => Promise<void>;
-  markComplete: (weekId: number, dayId: number, totalTimeSeconds: number) => Promise<void>;
+  markComplete: (
+    weekId: number,
+    dayId: number,
+    totalTimeSeconds: number,
+  ) => Promise<void>;
+  markCongratulationsShown: () => Promise<void>;
   isCompleted: (weekId: number, dayId: number) => boolean;
   isUnlocked: (weekId: number, dayId: number) => boolean;
-  getCompletion: (weekId: number, dayId: number) => WorkoutCompletion | undefined;
+  getCompletion: (
+    weekId: number,
+    dayId: number,
+  ) => WorkoutCompletion | undefined;
   resetProgress: () => Promise<void>;
 }
 
@@ -49,7 +57,7 @@ export const useProgressStore = create<ProgressState>((set, get) => ({
     const { progress } = get();
 
     const alreadyDone = progress.completedWorkouts.some(
-      (w) => w.weekId === weekId && w.dayId === dayId
+      (w) => w.weekId === weekId && w.dayId === dayId,
     );
 
     const completedWorkouts = alreadyDone
@@ -87,16 +95,24 @@ export const useProgressStore = create<ProgressState>((set, get) => ({
     set({ progress: next });
   },
 
+  markCongratulationsShown: async () => {
+    const { progress } = get();
+    const next: AppProgress = { ...progress, hasShownCongratulations: true };
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    set({ progress: next });
+  },
+
   isCompleted: (weekId, dayId) => {
     return get().progress.completedWorkouts.some(
-      (w) => w.weekId === weekId && w.dayId === dayId
+      (w) => w.weekId === weekId && w.dayId === dayId,
     );
   },
 
   isUnlocked: (weekId, dayId) => {
     const { progress, isCompleted } = get();
     if (weekId === 1 && dayId === 1) return true;
-    if (weekId === progress.currentWeekId && dayId === progress.currentDayId) return true;
+    if (weekId === progress.currentWeekId && dayId === progress.currentDayId)
+      return true;
     if (isCompleted(weekId, dayId)) return true;
 
     const prevDayId = dayId === 1 ? 3 : dayId - 1;
@@ -106,7 +122,7 @@ export const useProgressStore = create<ProgressState>((set, get) => ({
 
   getCompletion: (weekId, dayId) => {
     return get().progress.completedWorkouts.find(
-      (w) => w.weekId === weekId && w.dayId === dayId
+      (w) => w.weekId === weekId && w.dayId === dayId,
     );
   },
 

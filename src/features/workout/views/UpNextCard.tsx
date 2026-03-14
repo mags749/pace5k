@@ -2,7 +2,13 @@ import React from "react";
 import { View } from "react-native";
 import { styled, Text } from "tamagui";
 import { AppIcon } from "@shared/components/AppIcon";
-import { Colors, FontFamily, Radius, Shadow, Spacing } from "@shared/constants/design";
+import {
+  Colors,
+  FontFamily,
+  Radius,
+  Shadow,
+  Spacing,
+} from "@shared/constants/design";
 import { formatTimer, type Interval } from "@shared/constants/schedule";
 
 // ─── Styled ───────────────────────────────────────────────────────────────────
@@ -39,8 +45,10 @@ const TypeText = styled(Text, {
 } as any);
 
 const DurationText = styled(Text, {
-  fontSize: 14,
+  fontSize: 20,
   color: Colors.textSecondary,
+  fontFamily: FontFamily.michroma,
+  marginBottom: -Spacing.md,
 } as any);
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -56,13 +64,17 @@ export const UpNextCard = ({ interval }: UpNextCardProps) => {
     interval.type === "run"
       ? Colors.run
       : interval.type === "walk"
-      ? Colors.walk
-      : interval.type === "warmup"
-      ? Colors.warmup
-      : Colors.cooldown;
+        ? Colors.walk
+        : interval.type === "warmup"
+          ? Colors.warmup
+          : Colors.cooldown;
 
   const icon =
-    interval.type === "run" ? "running" : interval.type === "walk" ? "walking" : "timer";
+    interval.type === "run"
+      ? "running"
+      : interval.type === "walk"
+        ? "walking"
+        : "timer";
 
   return (
     <Card>
@@ -71,15 +83,18 @@ export const UpNextCard = ({ interval }: UpNextCardProps) => {
           UP NEXT
         </LabelText>
         <Row>
-          <AppIcon name={icon as any} size={22} color={accentColor} strokeWidth={1.6} />
+          <AppIcon
+            name={icon as any}
+            size={22}
+            color={accentColor}
+            strokeWidth={1.6}
+          />
           <TypeText style={{ fontFamily: FontFamily.archivoSemiBold }}>
             {interval.label}
           </TypeText>
-          <DurationText style={{ fontFamily: FontFamily.michroma }}>
-            {formatTimer(interval.duration)}
-          </DurationText>
         </Row>
       </Left>
+      <DurationText>{formatTimer(interval.duration)}</DurationText>
     </Card>
   );
 };

@@ -1,16 +1,12 @@
 {
   "expo": {
-    "name": "C25K Runner",
-    "slug": "c25k-runner",
+    "name": "Pace5k",
+    "slug": "pace5k-c25k-program",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "c25k",
+    "scheme": "com.yke.pace5k",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#FAF8F4"
-    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,

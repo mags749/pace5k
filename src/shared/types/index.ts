@@ -11,4 +11,5 @@ export interface AppProgress {
   completedWorkouts: WorkoutCompletion[];
   currentWeekId: number;
   currentDayId: number;
+  hasShownCongratulations?: boolean;
 }

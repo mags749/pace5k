@@ -3,7 +3,6 @@ import {
   Calendar,
   CheckCircle,
   NavArrowRight,
-  Home,
   Lock,
   Pause,
   Play,
@@ -20,6 +19,8 @@ import {
   SkipNext,
   Medal,
   Golf,
+  BadgeCheck,
+  HomeSimple,
 } from "iconoir-react-native";
 
 // ─── Name union ───────────────────────────────────────────────────────────────
@@ -33,6 +34,7 @@ export type AppIconName =
   | "nav-arrow-left"
   | "chevron-right"
   | "check-circle"
+  | "badge-check"
   | "lock"
   | "play"
   | "pause"
@@ -68,7 +70,7 @@ export const AppIcon = ({
 
   switch (name) {
     case "home":
-      return <Home {...props} />;
+      return <HomeSimple {...props} />;
     case "calendar":
       return <Calendar {...props} />;
     case "stats":
@@ -83,6 +85,8 @@ export const AppIcon = ({
       return <NavArrowRight {...props} />;
     case "check-circle":
       return <CheckCircle {...props} />;
+    case "badge-check":
+      return <BadgeCheck {...props} />;
     case "lock":
       return <Lock {...props} />;
     case "play":

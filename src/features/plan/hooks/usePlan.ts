@@ -8,13 +8,8 @@ import { C25K_SCHEDULE } from "@shared/constants/schedule";
 export const usePlan = () => {
   const router = useRouter();
 
-  const {
-    progress,
-    isLoading,
-    loadProgress,
-    isCompleted,
-    isUnlocked,
-  } = useProgressStore();
+  const { progress, isLoading, loadProgress, isCompleted, isUnlocked } =
+    useProgressStore();
 
   useEffect(() => {
     void loadProgress();

@@ -15,6 +15,10 @@ export const AppStack = () => (
       <Stack.Screen name="index" />
       <Stack.Screen name="workout/[weekId]/[dayId]/index" />
       <Stack.Screen name="completed/[weekId]/[dayId]/index" />
+      <Stack.Screen
+        name="congratulations/index"
+        options={{ animation: "fade" }}
+      />
     </Stack>
   </>
 );

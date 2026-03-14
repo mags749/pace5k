@@ -17,7 +17,7 @@ const WorkoutScreen = () => {
       nextInterval={hook.timer.nextInterval}
       completedIntervals={hook.timer.completedIntervals}
       intervalTimeLeft={hook.timer.intervalTimeLeft}
-      totalTimeElapsed={hook.timer.totalTimeElapsed}
+      totalTimeRemaining={hook.timer.totalTimeRemaining}
       countdownActive={hook.timer.countdownActive}
       isLastInterval={hook.timer.isLastInterval}
       onBack={hook.onBack}

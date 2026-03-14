@@ -66,13 +66,17 @@ export const PlanHeader = ({ firstName, completedCount }: PlanHeaderProps) => (
         Hi {firstName} 👋
       </GreetingText>
     </View>
-    <ProgressBadge>
-      <ProgressNum style={{ fontFamily: FontFamily.michroma }}>
-        {completedCount}
-      </ProgressNum>
-      <ProgressLabel style={{ fontFamily: FontFamily.archivo }}>
-        runs done
-      </ProgressLabel>
-    </ProgressBadge>
+    {completedCount > 0 ? (
+      <ProgressBadge>
+        <ProgressNum style={{ fontFamily: FontFamily.michroma }}>
+          {completedCount}
+        </ProgressNum>
+        <ProgressLabel style={{ fontFamily: FontFamily.archivo }}>
+          runs done
+        </ProgressLabel>
+      </ProgressBadge>
+    ) : (
+      <View />
+    )}
   </HeaderRow>
 );

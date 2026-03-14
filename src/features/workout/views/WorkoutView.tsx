@@ -4,10 +4,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { styled, Text } from "tamagui";
 import { LinearGradient } from "expo-linear-gradient";
 import { AppIcon } from "@shared/components/AppIcon";
-import { Colors, FontFamily, Radius, Shadow, Spacing } from "@shared/constants/design";
+import {
+  Colors,
+  FontFamily,
+  Radius,
+  Shadow,
+  Spacing,
+} from "@shared/constants/design";
 import {
   DAY_LABELS,
-  formatTimer,
   type Interval,
   type Workout,
 } from "@shared/constants/schedule";
@@ -46,13 +51,6 @@ const HeaderSub = styled(Text, {
 const TimerSection = styled(View, {
   alignItems: "center",
   paddingVertical: Spacing["2xl"],
-} as any);
-
-const TimerText = styled(Text, {
-  fontSize: 72,
-  letterSpacing: 1,
-  lineHeight: 80,
-  color: Colors.textPrimary,
 } as any);
 
 const TotalLabel = styled(Text, {
@@ -97,6 +95,81 @@ const PausedText = styled(Text, {
   color: Colors.accent,
 } as any);
 
+// ─── Fixed-width digit timer ──────────────────────────────────────────────────
+
+/** Renders MM:SS with each character in its own fixed-width View to prevent layout shift. */
+const FixedTimer = ({
+  seconds,
+  fontSize = 72,
+  color = Colors.textPrimary,
+  marginBottom,
+}: {
+  seconds: number;
+  fontSize?: number;
+  color?: string;
+  marginBottom?: number;
+}) => {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  const chars = [
+    ...String(m).padStart(2, "0").split(""),
+    ":",
+    ...String(s).padStart(2, "0").split(""),
+  ];
+  const digitW = fontSize * 1;
+  const colonW = fontSize * 0.32;
+
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom,
+      }}
+    >
+      {chars.map((ch, i) => (
+        <View
+          key={i}
+          style={{
+            width: ch === ":" ? colonW : digitW,
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={
+              {
+                fontSize,
+                lineHeight: fontSize * 1.12,
+                letterSpacing: 1,
+                color,
+                fontFamily: FontFamily.michroma,
+              } as any
+            }
+          >
+            {ch}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+/** Smaller variant used for secondary timers (e.g. total remaining). */
+const FixedTimerSmall = ({
+  seconds,
+  color = Colors.textSecondary,
+}: {
+  seconds: number;
+  color?: string;
+}) => (
+  <FixedTimer
+    seconds={seconds}
+    fontSize={16}
+    color={color}
+    marginBottom={-Spacing.sm}
+  />
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface WorkoutViewProps {
@@ -108,7 +181,7 @@ interface WorkoutViewProps {
   nextInterval: Interval | null;
   completedIntervals: Interval[];
   intervalTimeLeft: number;
-  totalTimeElapsed: number;
+  totalTimeRemaining: number;
   countdownActive: boolean;
   isLastInterval: boolean;
   onBack: () => void;
@@ -120,11 +193,16 @@ interface WorkoutViewProps {
 
 function getPaceLabel(type: string): string {
   switch (type) {
-    case "run": return "~5:30 / km";
-    case "walk": return "Brisk walk";
-    case "warmup": return "Easy walk";
-    case "cooldown": return "Recovery walk";
-    default: return "";
+    case "run":
+      return "~5:30 / km";
+    case "walk":
+      return "Brisk walk";
+    case "warmup":
+      return "Easy walk";
+    case "cooldown":
+      return "Recovery walk";
+    default:
+      return "";
   }
 }
 
@@ -133,13 +211,12 @@ function getPaceLabel(type: string): string {
 export const WorkoutView = ({
   wId,
   dId,
-  workout,
   state,
   currentInterval,
   nextInterval,
   completedIntervals,
   intervalTimeLeft,
-  totalTimeElapsed,
+  totalTimeRemaining,
   countdownActive,
   isLastInterval,
   onBack,
@@ -168,7 +245,12 @@ export const WorkoutView = ({
             opacity: pressed ? 0.7 : 1,
           })}
         >
-          <AppIcon name="arrow-left" size={22} color={Colors.textPrimary} strokeWidth={1.8} />
+          <AppIcon
+            name="arrow-left"
+            size={22}
+            color={Colors.textPrimary}
+            strokeWidth={1.8}
+          />
         </Pressable>
         <HeaderCenter>
           <HeaderTitle style={{ fontFamily: FontFamily.archivoSemiBold }}>
@@ -180,7 +262,6 @@ export const WorkoutView = ({
         </HeaderCenter>
         <View style={{ width: 40 }} />
       </HeaderView>
-
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
@@ -191,12 +272,22 @@ export const WorkoutView = ({
         showsVerticalScrollIndicator={false}
       >
         <TimerSection>
-          <TimerText style={{ fontFamily: FontFamily.michroma }}>
-            {formatTimer(intervalTimeLeft)}
-          </TimerText>
-          <TotalLabel style={{ fontFamily: FontFamily.michroma }}>
-            Total: {formatTimer(totalTimeElapsed)}
-          </TotalLabel>
+          <FixedTimer seconds={intervalTimeLeft} />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: Spacing.xs,
+              marginTop: Spacing.xs,
+            }}
+          >
+            <TotalLabel style={{ fontFamily: FontFamily.michroma }}>
+              {isLastInterval ? " " : "Remaining: "}
+            </TotalLabel>
+            {!isLastInterval && (
+              <FixedTimerSmall seconds={totalTimeRemaining} />
+            )}
+          </View>
         </TimerSection>
 
         {currentInterval && (
@@ -228,7 +319,13 @@ export const WorkoutView = ({
           </PausedBanner>
         )}
         <Pressable
-          onPress={state === "idle" ? onStart : state === "running" ? onPause : onResume}
+          onPress={
+            state === "idle"
+              ? onStart
+              : state === "running"
+                ? onPause
+                : onResume
+          }
           style={({ pressed }) => ({
             width: 80,
             height: 80,
@@ -247,13 +344,13 @@ export const WorkoutView = ({
             strokeWidth={1.5}
           />
         </Pressable>
-        {state !== "idle" && !isLastInterval && (
+        {state !== "idle" && (
           <Pressable
             onPress={onSkip}
             style={({ pressed }) => ({
-              width: 40,
-              height: 40,
-              borderRadius: 20,
+              width: 56,
+              height: 56,
+              borderRadius: 30,
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: Colors.surfaceSecondary,
@@ -263,7 +360,12 @@ export const WorkoutView = ({
               opacity: pressed ? 0.7 : 1,
             })}
           >
-            <AppIcon name="skip-forward" size={22} color={Colors.textPrimary} strokeWidth={1.8} />
+            <AppIcon
+              name={isLastInterval ? "badge-check" : "skip-forward"}
+              size={32}
+              color={Colors.textPrimary}
+              strokeWidth={1.8}
+            />
           </Pressable>
         )}
       </Controls>

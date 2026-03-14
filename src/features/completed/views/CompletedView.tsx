@@ -5,7 +5,13 @@ import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styled, Text } from "tamagui";
 import { AppIcon } from "@shared/components/AppIcon";
-import { Colors, FontFamily, Radius, Shadow, Spacing } from "@shared/constants/design";
+import {
+  Colors,
+  FontFamily,
+  Radius,
+  Shadow,
+  Spacing,
+} from "@shared/constants/design";
 import {
   DAY_LABELS,
   formatTimer,
@@ -62,7 +68,11 @@ export const CompletedView = ({
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 600, useNativeDriver: true }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
       Animated.spring(slideAnim, {
         toValue: 0,
         speed: 12,
@@ -72,15 +82,21 @@ export const CompletedView = ({
     ]).start();
   }, []);
 
-  const totalTime = completion ? formatTimer(completion.totalTimeSeconds) : "--:--";
+  const totalTime = completion
+    ? formatTimer(completion.totalTimeSeconds)
+    : "--:--";
   const completedAt = completion
     ? format(new Date(completion.completedAt), "MMM d, yyyy · h:mm a")
     : "Just completed";
 
-  const runIntervals = workout?.intervals.filter((iv) => iv.type === "run") ?? [];
+  const runIntervals =
+    workout?.intervals.filter((iv) => iv.type === "run") ?? [];
   const totalRunSecs = runIntervals.reduce((a, b) => a + b.duration, 0);
 
-  const animated = { opacity: fadeAnim, transform: [{ translateY: slideAnim }] };
+  const animated = {
+    opacity: fadeAnim,
+    transform: [{ translateY: slideAnim }],
+  };
 
   return (
     <LinearGradient
@@ -107,61 +123,85 @@ export const CompletedView = ({
           </View>
 
           {/* Headline */}
-          <Animated.View style={[{ alignItems: "center", gap: Spacing.sm }, animated]}>
+          <Animated.View
+            style={[{ alignItems: "center", gap: Spacing.sm }, animated]}
+          >
             <Text
-              style={{
-                fontSize: 30,
-                letterSpacing: -0.5,
-                textAlign: "center",
-                lineHeight: 36,
-                color: Colors.textPrimary,
-                fontFamily: FontFamily.archivoBold,
-              } as any}
+              style={
+                {
+                  fontSize: 30,
+                  letterSpacing: -0.5,
+                  textAlign: "center",
+                  lineHeight: 36,
+                  color: Colors.textPrimary,
+                  fontFamily: FontFamily.archivoBold,
+                } as any
+              }
             >
-              Week {wId}, Day {dId}{"\n"}Complete!
+              Week {wId}, Day {dId}
+              {"\n"}Complete!
             </Text>
             <Text
-              style={{
-                fontSize: 52,
-                letterSpacing: -2,
-                lineHeight: 58,
-                color: Colors.accent,
-                fontFamily: FontFamily.michroma,
-              } as any}
+              style={
+                {
+                  fontSize: 52,
+                  letterSpacing: -2,
+                  lineHeight: 58,
+                  color: Colors.accent,
+                  fontFamily: FontFamily.michroma,
+                } as any
+              }
             >
               {totalTime}
             </Text>
             <Text
-              style={{
-                fontSize: 15,
-                textAlign: "center",
-                lineHeight: 22,
-                maxWidth: 300,
-                color: Colors.textSecondary,
-                fontFamily: FontFamily.archivo,
-              } as any}
+              style={
+                {
+                  fontSize: 15,
+                  textAlign: "center",
+                  lineHeight: 22,
+                  maxWidth: 300,
+                  color: Colors.textSecondary,
+                  fontFamily: FontFamily.archivo,
+                } as any
+              }
             >
               {isLastWorkout
                 ? "You completed the entire C25K program! 🏆"
                 : "Great job! Keep it up and you'll be ready for your first 5K!"}
             </Text>
             <Text
-              style={{
-                fontSize: 12,
-                letterSpacing: 0.2,
-                color: Colors.textTertiary,
-                fontFamily: FontFamily.archivo,
-              } as any}
+              style={
+                {
+                  fontSize: 12,
+                  letterSpacing: 0.2,
+                  color: Colors.textTertiary,
+                  fontFamily: FontFamily.archivo,
+                } as any
+              }
             >
               {completedAt}
             </Text>
           </Animated.View>
 
           {/* Stats */}
-          <Animated.View style={[{ flexDirection: "row", gap: Spacing.sm, width: "100%" }, animated]}>
+          <Animated.View
+            style={[
+              { flexDirection: "row", gap: Spacing.sm, width: "100%" },
+              animated,
+            ]}
+          >
             <StatCard value={totalTime} label="Total Time" highlight={true} />
-            <StatCard value={formatTimer(totalRunSecs)} label="Run Time" highlight={false} />
-            <StatCard value={`${runIntervals.length}`} label="Intervals" highlight={false} />
+            <StatCard
+              value={formatTimer(totalRunSecs)}
+              label="Run Time"
+              highlight={false}
+            />
+            <StatCard
+              value={`${runIntervals.length}`}
+              label="Intervals"
+              highlight={false}
+            />
           </Animated.View>
 
           {/* Recap card */}
@@ -179,17 +219,38 @@ export const CompletedView = ({
             ]}
           >
             <Text
-              style={{ fontSize: 16, color: Colors.textPrimary, fontFamily: FontFamily.archivoSemiBold } as any}
+              style={
+                {
+                  fontSize: 16,
+                  color: Colors.textPrimary,
+                  fontFamily: FontFamily.archivoSemiBold,
+                } as any
+              }
             >
               Recap
             </Text>
             <Text
-              style={{ fontSize: 13, lineHeight: 18, color: Colors.textSecondary, fontFamily: FontFamily.archivo } as any}
+              style={
+                {
+                  fontSize: 13,
+                  lineHeight: 18,
+                  color: Colors.textSecondary,
+                  fontFamily: FontFamily.archivo,
+                } as any
+              }
             >
               {workout?.description}
             </Text>
 
-            <View style={{ flexDirection: "row", height: 10, borderRadius: Radius.full, overflow: "hidden", gap: 1 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                height: 10,
+                borderRadius: Radius.full,
+                overflow: "hidden",
+                gap: 1,
+              }}
+            >
               {workout?.intervals
                 .filter((iv) => iv.type !== "warmup" && iv.type !== "cooldown")
                 .map((iv, idx) => (
@@ -197,7 +258,8 @@ export const CompletedView = ({
                     key={idx}
                     style={{
                       flex: iv.duration,
-                      backgroundColor: iv.type === "run" ? Colors.run : Colors.walk,
+                      backgroundColor:
+                        iv.type === "run" ? Colors.run : Colors.walk,
                       borderRadius: Radius.full,
                       minWidth: 3,
                     }}
@@ -210,9 +272,31 @@ export const CompletedView = ({
                 { color: Colors.run, label: "Run" },
                 { color: Colors.walk, label: "Walk" },
               ].map(({ color, label }) => (
-                <View key={label} style={{ flexDirection: "row", alignItems: "center", gap: Spacing.xs }}>
-                  <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: color }} />
-                  <Text style={{ fontSize: 12, color: Colors.textSecondary, fontFamily: FontFamily.archivo } as any}>
+                <View
+                  key={label}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: Spacing.xs,
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: 4,
+                      backgroundColor: color,
+                    }}
+                  />
+                  <Text
+                    style={
+                      {
+                        fontSize: 12,
+                        color: Colors.textSecondary,
+                        fontFamily: FontFamily.archivo,
+                      } as any
+                    }
+                  >
                     {label}
                   </Text>
                 </View>
@@ -237,18 +321,31 @@ export const CompletedView = ({
               ]}
             >
               <View style={{ flex: 1, gap: 2 }}>
-                <Text style={{ fontSize: 11, letterSpacing: 1, color: Colors.textTertiary, fontFamily: FontFamily.archivoSemiBold } as any}>
+                <Text
+                  style={
+                    {
+                      fontSize: 11,
+                      letterSpacing: 1,
+                      color: Colors.textTertiary,
+                      fontFamily: FontFamily.archivoSemiBold,
+                    } as any
+                  }
+                >
                   UP NEXT
                 </Text>
-                <Text style={{ fontSize: 16, color: Colors.textPrimary, fontFamily: FontFamily.archivoSemiBold } as any}>
+                <Text
+                  style={
+                    {
+                      fontSize: 16,
+                      color: Colors.textPrimary,
+                      fontFamily: FontFamily.archivoSemiBold,
+                    } as any
+                  }
+                >
                   Week {wId}, Day {dId + 1 <= 3 ? dId + 1 : 1} —{" "}
                   {DAY_LABELS[dId <= 2 ? dId : 0]}
                 </Text>
-                <Text style={{ fontSize: 12, color: Colors.accent, fontFamily: FontFamily.archivo } as any}>
-                  Tomorrow
-                </Text>
               </View>
-              <AppIcon name="chevron-right" size={20} color={Colors.textTertiary} />
             </Animated.View>
           )}
 
@@ -269,8 +366,15 @@ export const CompletedView = ({
                   ...Shadow.accent,
                 })}
               >
-                <AppIcon name="running" size={20} color={Colors.accentForeground} strokeWidth={1.6} />
-                <PrimaryBtnText style={{ fontFamily: FontFamily.archivoBold } as any}>
+                <AppIcon
+                  name="running"
+                  size={20}
+                  color={Colors.accentForeground}
+                  strokeWidth={1.6}
+                />
+                <PrimaryBtnText
+                  style={{ fontFamily: FontFamily.archivoBold } as any}
+                >
                   Next Run
                 </PrimaryBtnText>
               </Pressable>
@@ -289,8 +393,14 @@ export const CompletedView = ({
                   ...Shadow.accent,
                 })}
               >
-                <AppIcon name="trophy" size={20} color={Colors.accentForeground} />
-                <PrimaryBtnText style={{ fontFamily: FontFamily.archivoBold } as any}>
+                <AppIcon
+                  name="trophy"
+                  size={20}
+                  color={Colors.accentForeground}
+                />
+                <PrimaryBtnText
+                  style={{ fontFamily: FontFamily.archivoBold } as any}
+                >
                   View My Journey
                 </PrimaryBtnText>
               </Pressable>
@@ -314,8 +424,15 @@ export const CompletedView = ({
                   ...Shadow.sm,
                 })}
               >
-                <AppIcon name="refresh" size={16} color={Colors.accent} strokeWidth={1.8} />
-                <SecondaryBtnText style={{ fontFamily: FontFamily.archivoMedium } as any}>
+                <AppIcon
+                  name="refresh"
+                  size={16}
+                  color={Colors.accent}
+                  strokeWidth={1.8}
+                />
+                <SecondaryBtnText
+                  style={{ fontFamily: FontFamily.archivoMedium } as any}
+                >
                   Redo
                 </SecondaryBtnText>
               </Pressable>
@@ -336,8 +453,15 @@ export const CompletedView = ({
                   ...Shadow.sm,
                 })}
               >
-                <AppIcon name="home" size={16} color={Colors.accent} strokeWidth={1.8} />
-                <SecondaryBtnText style={{ fontFamily: FontFamily.archivoMedium } as any}>
+                <AppIcon
+                  name="home"
+                  size={20}
+                  color={Colors.accent}
+                  strokeWidth={1.8}
+                />
+                <SecondaryBtnText
+                  style={{ fontFamily: FontFamily.archivoMedium } as any}
+                >
                   Home
                 </SecondaryBtnText>
               </Pressable>

@@ -13,10 +13,17 @@ const COUNTDOWN_SECONDS = 5;
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
+const getTotalDuration = (intervals: Interval[]) =>
+  intervals.reduce((sum, iv) => sum + iv.duration, 0);
+
 export const useWorkoutTimer = (intervals: Interval[]) => {
+  const totalDuration = getTotalDuration(intervals);
+
   const [state, setState] = useState<WorkoutState>("idle");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [intervalTimeLeft, setIntervalTimeLeft] = useState(intervals[0]?.duration ?? 0);
+  const [intervalTimeLeft, setIntervalTimeLeft] = useState(
+    intervals[0]?.duration ?? 0,
+  );
   const [totalTimeElapsed, setTotalTimeElapsed] = useState(0);
   const [countdownActive, setCountdownActive] = useState(false);
 
@@ -42,7 +49,9 @@ export const useWorkoutTimer = (intervals: Interval[]) => {
         setState("completed");
         if (tickRef.current) clearInterval(tickRef.current);
         void audioService.playComplete();
-        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        void Haptics.notificationAsync(
+          Haptics.NotificationFeedbackType.Success,
+        );
         return;
       }
 
@@ -55,7 +64,7 @@ export const useWorkoutTimer = (intervals: Interval[]) => {
       }
       setCountdownActive(false);
     },
-    [intervals]
+    [intervals],
   );
 
   // ─── Tick ──────────────────────────────────────────────────────────────────
@@ -114,7 +123,10 @@ export const useWorkoutTimer = (intervals: Interval[]) => {
   }, []);
 
   const skipToNext = useCallback(() => {
-    if (indexRef.current < intervals.length - 1) {
+    if (indexRef.current < intervals.length) {
+      // Deduct the remaining time of the skipped interval from totalTimeElapsed tracking
+      // by adding it to elapsed so remaining stays accurate
+      setTotalTimeElapsed((t) => t + timeLeftRef.current);
       advanceInterval(indexRef.current);
     }
   }, [advanceInterval, intervals.length]);
@@ -133,10 +145,11 @@ export const useWorkoutTimer = (intervals: Interval[]) => {
     currentIndex,
     intervalTimeLeft,
     totalTimeElapsed,
+    totalTimeRemaining: Math.max(0, totalDuration - totalTimeElapsed),
     countdownActive,
     currentInterval: intervals[currentIndex],
     nextInterval: intervals[currentIndex + 1] ?? null,
-    completedIntervals: intervals.slice(0, currentIndex),
+    completedIntervals: intervals.slice(0, currentIndex).reverse(),
     isLastInterval: currentIndex === intervals.length - 1,
     start,
     pause,

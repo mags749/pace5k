@@ -2,7 +2,13 @@ import React, { useEffect, useRef } from "react";
 import { Animated, View } from "react-native";
 import { styled, Text } from "tamagui";
 import { AppIcon } from "@shared/components/AppIcon";
-import { Colors, FontFamily, Radius, Shadow, Spacing } from "@shared/constants/design";
+import {
+  Colors,
+  FontFamily,
+  Radius,
+  Shadow,
+  Spacing,
+} from "@shared/constants/design";
 import type { Interval } from "@shared/constants/schedule";
 
 // ─── Styled ───────────────────────────────────────────────────────────────────
@@ -67,11 +73,16 @@ interface CurrentIntervalCardProps {
 
 function getAccent(type: string): string {
   switch (type) {
-    case "run": return Colors.run;
-    case "walk": return Colors.walk;
-    case "warmup": return Colors.warmup;
-    case "cooldown": return Colors.cooldown;
-    default: return Colors.accent;
+    case "run":
+      return Colors.run;
+    case "walk":
+      return Colors.walk;
+    case "warmup":
+      return Colors.warmup;
+    case "cooldown":
+      return Colors.cooldown;
+    default:
+      return Colors.accent;
   }
 }
 
@@ -99,9 +110,17 @@ export const CurrentIntervalCard = ({
     if (interval.type === "run") {
       const loop = Animated.loop(
         Animated.sequence([
-          Animated.timing(pulseAnim, { toValue: 1.02, duration: 700, useNativeDriver: true }),
-          Animated.timing(pulseAnim, { toValue: 1, duration: 700, useNativeDriver: true }),
-        ])
+          Animated.timing(pulseAnim, {
+            toValue: 1.02,
+            duration: 700,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 700,
+            useNativeDriver: true,
+          }),
+        ]),
       );
       loop.start();
       return () => loop.stop();
@@ -131,14 +150,27 @@ export const CurrentIntervalCard = ({
                 strokeWidth={1.6}
               />
             ) : (
-              <AppIcon name="timer" size={24} color={accent} strokeWidth={1.6} />
+              <AppIcon
+                name="timer"
+                size={24}
+                color={accent}
+                strokeWidth={1.6}
+              />
             )}
           </View>
           <HeaderText>
-            <IntervalType style={{ color: accent, fontFamily: FontFamily.archivoBold }}>
+            <IntervalType
+              style={{ color: accent, fontFamily: FontFamily.archivoBold }}
+            >
               {interval.label}
             </IntervalType>
-            <PaceText style={{ fontFamily: FontFamily.archivo }}>{paceLabel}</PaceText>
+            <PaceText
+              style={{
+                fontFamily: FontFamily.archivo,
+              }}
+            >
+              {paceLabel}
+            </PaceText>
           </HeaderText>
         </Header>
 
@@ -150,7 +182,7 @@ export const CurrentIntervalCard = ({
               backgroundColor: accent,
               width: progressAnim.interpolate({
                 inputRange: [0, 1],
-                outputRange: ["0%", "100%"],
+                outputRange: ["100%", "0%"],
               }),
             }}
           />

@@ -7,9 +7,12 @@ import { useWorkoutTimer } from "./useWorkoutTimer";
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export const useWorkout = () => {
-  const { weekId, dayId } = useLocalSearchParams<{ weekId: string; dayId: string }>();
+  const { weekId, dayId } = useLocalSearchParams<{
+    weekId: string;
+    dayId: string;
+  }>();
   const router = useRouter();
-  const { markComplete } = useProgressStore();
+  const { markComplete, progress } = useProgressStore();
 
   const wId = parseInt(weekId ?? "1");
   const dId = parseInt(dayId ?? "1");
@@ -17,11 +20,18 @@ export const useWorkout = () => {
 
   const timer = useWorkoutTimer(workout?.intervals ?? []);
 
-  // Navigate to completed when workout finishes
+  const isVeryLastWorkout = wId === 9 && dId === 3;
+
+  // Navigate when workout finishes
   useEffect(() => {
     if (timer.state === "completed" && workout) {
       void markComplete(wId, dId, timer.totalTimeElapsed).then(() => {
-        router.replace(`/completed/${wId}/${dId}`);
+        // Show the one-time congratulations screen only for the final workout
+        if (isVeryLastWorkout && !progress.hasShownCongratulations) {
+          router.replace("/congratulations");
+        } else {
+          router.replace(`/completed/${wId}/${dId}`);
+        }
       });
     }
   }, [timer.state]);
